@@ -1,0 +1,82 @@
+//Twitter Setup
+console.log('hello!');
+var Twit = require('twit');
+var Twitter = require('./twitter.js');
+var config = require('./config');
+var T = new Twit(config);
+
+const config1 = {
+    consumer_key: 'JxXm2YdPpWSkxneK1CdWBSozW',
+    consumer_secret: 'cbkxvpkLjM3VjhzFbNBDGiybmLYkaXUWmLzIdbu3WGPlPiwny5',
+    token: '1314308190952185856-fCoHwZnsXoSWZiwknd0FAkjX01gwJ1',
+    token_secret: 'WwF7klQakQdEGoFTuHcs7DGojj4rloISl0gxSfsVaJ3sP',
+    env: 'test',
+    ngrok: 'test',
+  };
+
+var twitter = new Twitter(config1);
+
+
+//Giphy Setup
+const dotenv = require("dotenv");
+dotenv.config();
+const fetch = require("node-fetch");
+const Tenor = require("tenorjs").client({
+    Key: "16YBXK0A4FM7",
+    Filter:"medium",
+    Locale: "en_US",
+    MediaFilter: "minimal",
+    DateFormat: "10/10/2020 - 00:00:00 A",
+})
+
+tweetIt();
+setInterval(tweetIt,1000*60*60);
+
+function tweetIt(){
+    var params = {
+        q: 'birthday',
+        count: 1
+    }
+    T.get('search/tweets', params, gotData);
+    function gotData(err,data,response){
+        var tweets = data.statuses[0];
+        console.log(tweets.text);
+        T.post('statuses/retweet/'+tweets.id_str);
+    }
+    tweetGIF();
+}
+
+async function tweetGIF(){
+    const gif = await getGIF();
+    const response1 = await twitter.upload(gif);
+    const response3 = await twitter.tweet(`🎂🎉🎂🎉🎂🎉🎂Happy Birthday🎉🎂🎉🎂🎉🎂🎉🎂!`, 
+    [response1.media_id_string]);
+}
+function random(arr){
+    let i = Math.floor(Math.random()*arr.length);
+    return arr[i];
+}
+
+async function getGIF() {
+    const gifs = await Tenor.Search.Query("birthday", "11");
+    let gif = random(gifs);
+    let url = gif.media[0].tinygif.url;
+    let response = await fetch(url);
+    let blob = await response.blob();
+    let buffer = await blob.arrayBuffer();
+    let base64String = Buffer.from(buffer).toString("base64");
+    return base64String;
+}
+
+
+/*var tweet = {
+    status: 'Happy Birthday!🎉🎉🎉🎉' 
+}
+T.post('statuses/update', tweet,tweeted);
+    function tweeted(err, data, response) {
+        if(err){
+            console.log("Something went wrong!");
+        }else if(response){
+            console.log("It worked!");
+    }
+}*/
