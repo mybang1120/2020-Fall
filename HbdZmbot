@@ -6,10 +6,10 @@ var config = require('./config');
 var T = new Twit(config);
 
 const config1 = {
-    consumer_key: 'JxXm2YdPpWSkxneK1CdWBSozW',
-    consumer_secret: 'cbkxvpkLjM3VjhzFbNBDGiybmLYkaXUWmLzIdbu3WGPlPiwny5',
-    token: '1314308190952185856-fCoHwZnsXoSWZiwknd0FAkjX01gwJ1',
-    token_secret: 'WwF7klQakQdEGoFTuHcs7DGojj4rloISl0gxSfsVaJ3sP',
+    consumer_key: '',
+    consumer_secret: '',
+    token: '',
+    token_secret: '',
     env: 'test',
     ngrok: 'test',
   };
